@@ -53,9 +53,27 @@ __10. Installed and configured PostgreSQL__
 * I installed PostgreSQL by running sudo apt-get install postgresql postgresql-contrib
 * I checked that remote connections are not allowed by running sudo cat /etc/postgresql/9.3/main/pg_hba.conf
 
-__11. I installed Flask and other packages necessary or my project__
+__11. Installed Flask and other packages necessary for my project__
 I ran:
 * sudo apt-get install python-pip
 * sudo pip install Flask
 * sudo pip install httplib2 oauth2client sqlalchemy psycopg2 sqlalchemy_utils
 * sudo pip install requests
+
+__12. Cloned the Infinite Shelf app from my GitHub repository__
+* I created an Infinite Shelf directory by running sudo mkdir /var/www/infiniteShelf
+* I cloned my project by running https://github.com/krozuma/Infinite-Shelf.git
+* I cd'd into the directory and renamed it infinite_shelf
+
+__13. Created the Postgres user catalog and created a catalog database
+
+__14. Create and configure my .wsgi file__
+* I ran touch infiniteShelf.wsgi && nano infiniteShelf.wsgi
+* import sys
+  import logging
+  logging.basicConfig(stream=sys.stderr)
+  sys.path.insert(0, "/var/www/infiniteShelf/infinite_shelf")
+
+  from infinite_shelf import app as application
+  
+ * I changed infinite_shelf.py to  
