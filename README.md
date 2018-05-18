@@ -1,5 +1,7 @@
 # Infinite-Shelf-Linux-Server-Configuration
 
+These are the steps I took to set up an Amazon lightsail server so that it ran my Infinite Shelf project https://github.com/krozuma/Infinite-Shelf.
+
 * __Public IP Address:__ http://ec2-13-58-229-23.us-east-2.compute.amazonaws.com
 * __SSH port:__ 2200
 
@@ -76,4 +78,55 @@ __14. Create and configure my .wsgi file__
 
   from infinite_shelf import app as application
   
- * I changed infinite_shelf.py to  
+ * I changed infinite_shelf.py to engine = create_engine('postgresql://catalog:password@localhost/catalog')
+ 
+ __15. Set up the database__
+ * I ran python database_setup.py
+ 
+__16. Edit and create the .conf files__
+* I ran sudo nano /etc/apache2/sites-available/000-default.conf
+
+<VirtualHost *:80>
+        ServerAdmin krozu@comcast.net
+        WSGIScriptAlias /infiniteShelf /var/www/infiniteShelf/infinite_shelf/infiniteShelf.wsgi
+        <Directory /var/www/infiniteShelf/infinite_shelf/>
+            Order allow,deny
+            Allow from all
+        </Directory>
+        Alias /static /var/www/infiniteShelf/infinite_shelf/static
+        <Directory /var/www/infiniteShelf/infinite_shelf/static/>
+            Order allow,deny
+            Allow from all
+        </Directory>
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+</VirtualHost>
+
+* I ran sudo nano /etc/apache2/sites-available/.conf
+<VirtualHost *:80>
+                 ServerName ec2-13-58-229-23.us-east-2.compute.amazonaws.com
+                 ServerAdmin youemail@email.com
+                 WSGIScriptAlias / /var/www/infiniteShelf/infinite_shelf/infiniteShelf.wsgi
+                 <Directory /var/www/infiniteShelf/infinite_shelf/>
+                          Require all granted
+                 </Directory>
+                 Alias /static /var/www/infiniteShelf/infinite_shelf/static
+                 <Directory /var/www/infiniteShelf/infinite_shelf/static/>
+                         Order allow,deny
+                         Allow from all
+                 </Directory>
+                 ErrorLog ${APACHE_LOG_DIR}/error.log
+                 LogLevel warn
+                 CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+__17. Run sudo a2ensite infinite_shelf__
+
+__18. Restart Apache2__
+* I ran sudo service apache2 restart
+
+#### Research Resources ####
+* My Udacity mentor's Github page: https://github.com/sagarchoudhary96/P8-Linux-Server-Configuration
+* DigitalOcean Apache server article https://www.digitalocean.com/community/tutorials/how-to-install-the-apache-web-server-on-ubuntu-16-04
